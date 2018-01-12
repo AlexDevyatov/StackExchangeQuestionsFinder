@@ -1,11 +1,13 @@
 package com.alexdevyatov.example.PianoTask.controller;
 
-import com.alexdevyatov.example.PianoTask.model.Greeting;
+import com.alexdevyatov.example.PianoTask.model.Question;
+import com.alexdevyatov.example.PianoTask.service.DataLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 /**
  * Created by Алексей on 12.01.2018.
@@ -13,12 +15,16 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class Controller {
 
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
+    @Autowired
+    private DataLoader loader;
 
-    @RequestMapping("/greeting")
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Greeting(counter.incrementAndGet(),
-                String.format(template, name));
+    @RequestMapping("/")
+    public String hello() {
+        return "Hello";
+    }
+
+    @RequestMapping("/search")
+    public List<Question> search(@RequestParam(value="keyword", defaultValue="java") String keyword) {
+        return loader.getQuestionsList(keyword);
     }
 }
